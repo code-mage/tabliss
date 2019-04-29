@@ -14,7 +14,7 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "content_security_policy": "script-src 'self' https://www.google.com https://api.bing.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://www.google.com https://api.bing.com https://drive.google.com https://drive.google.com; object-src 'self'",
   "icons": {
     "32": "icons/32.png",
     "48": "icons/48.png",

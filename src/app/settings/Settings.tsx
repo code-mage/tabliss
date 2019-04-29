@@ -1,13 +1,9 @@
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import { ActionCreator, connect } from 'react-redux';
 import Background from './Background';
-import Feedback from './Feedback';
 import Homepage from './Homepage';
-import System from './System';
 import Widgets from './Widgets';
 import { Action, resetDashboard, toggleSettings } from '../../data';
-import { githubIcon, globeIcon, twitterIcon } from '../ui';
 import './Settings.sass';
 const logo = require('./logo.svg');
 const ESCAPE_KEY = 27;
@@ -38,40 +34,9 @@ class Settings extends React.PureComponent<Props> {
 
           <Widgets />
 
-          <System />
-
           {process.env.BUILD_TARGET === 'firefox' && <Homepage />}
 
-          <Feedback />
-
-          <p>
-            <a href="https://www.paypal.me/tabliss" target="_blank" rel="noopener noreferrer">
-              Love Tabliss? Donate 😍
-            </a>
-          </p>
-
           <p><a onClick={this.reset}>Reset to default</a></p>
-
-          <p>
-            <a href="https://tabliss.io/" target="_blank">
-              {globeIcon}
-            </a>
-            &nbsp;&nbsp;
-            <a href="https://twitter.com/tabliss" target="_blank" rel="noopener noreferrer">
-              {twitterIcon}
-            </a>
-            &nbsp;&nbsp;
-            <a href="https://github.com/joelshepherd/tabliss" target="_blank" rel="noopener noreferrer">
-              {githubIcon}
-            </a>
-          </p>
-
-          <FormattedMessage
-            id="settings.translationCredits"
-            description="Give yourself some credit :)"
-            defaultMessage=" "
-            tagName="p"
-          />
         </div>
       </div>
     );

@@ -92,8 +92,6 @@ const config = {
       BUILD_TARGET: 'web',
       API_ENDPOINT: 'https://api.tabliss.io/v1',
       SENTRY_PUBLIC_DSN: null,
-      DRIBBBLE_API_KEY: null,
-      GIPHY_API_KEY: null,
       UNSPLASH_API_KEY: null,
       VERSION: version,
     }),

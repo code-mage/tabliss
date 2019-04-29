@@ -1,4 +1,3 @@
-import debounce from 'lodash-es/debounce';
 import get from 'lodash-es/get';
 import * as React from 'react';
 import { ActionCreator, connect } from 'react-redux';
@@ -33,7 +32,6 @@ interface State {
 class Unsplash extends React.PureComponent<Props, State> {
   static defaultProps: Partial<Props> = defaultProps;
   state: State = {};
-  private refreshDebounced = debounce(this.refresh, 250);
 
   componentWillMount() {
     const shouldRotate = this.shouldRotate();
@@ -46,17 +44,6 @@ class Unsplash extends React.PureComponent<Props, State> {
         }
       })
       .catch(() => this.refresh(this.props));
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.by !== this.props.by || nextProps.featured !== this.props.featured) {
-      this.refreshDebounced.cancel();
-      this.refresh(nextProps);
-    }
-
-    if (nextProps.search !== this.props.search || nextProps.collections !== this.props.collections) {
-      this.refreshDebounced(nextProps);
-    }
   }
 
   render() {
@@ -121,7 +108,7 @@ class Unsplash extends React.PureComponent<Props, State> {
     this.props.updateLocal({ current: {
       ...image, timestamp,
     }});
-    
+
     let img = new Image();
     img.onerror = () => {
         this.refresh(this.props);

@@ -1,5 +1,5 @@
-import { officialCollection, UNSPLASH_API_KEY } from './constants';
-import { By, Image, Settings } from './interfaces';
+import { UNSPLASH_API_KEY } from './constants';
+import { Image, Settings } from './interfaces';
 
 export const getImage = async function (
   settings: Settings,
@@ -7,26 +7,13 @@ export const getImage = async function (
   popCallback: Function,
 ): Promise<Image> {
   // Setup
-  const { by, collections, featured, search } = settings;
   const headers = new Headers();
   headers.append('Authorization', `Client-ID ${UNSPLASH_API_KEY}`);
 
   // Build search url
   let url = 'https://api.unsplash.com/photos/random?';
-  switch (by) {
-    case By.COLLECTIONS:
-      url += `collections=${collections}`;
-      break;
-
-    case By.SEARCH:
-      url += 'orientation=landscape'
-        + (featured ? '&featured=true' : '')
-        + (search ? `&query=${search}` : '');
-      break;
-
-    default:
-      url += `collections=${officialCollection}`;
-  }
+  url += 'orientation=landscape'
+        + (`&query=animals`);
 
   // Fetch from API
   pushCallback();

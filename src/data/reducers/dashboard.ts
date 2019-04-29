@@ -12,8 +12,7 @@ const initialState = {
   background: 'extra/backgrounds/unsplash',
   widgets: [
     'core/widgets/time',
-    'core/widgets/greeting',
-    'core/widgets/font',
+    'extra/widgets/quote',
   ],
 };
 
