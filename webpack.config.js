@@ -93,6 +93,7 @@ const config = {
       API_ENDPOINT: 'https://api.tabliss.io/v1',
       SENTRY_PUBLIC_DSN: null,
       UNSPLASH_API_KEY: null,
+      BING_API_KEY: null,
       VERSION: version,
     }),
   ],

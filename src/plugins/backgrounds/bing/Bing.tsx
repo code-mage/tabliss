@@ -1,0 +1,156 @@
+import get from 'lodash-es/get';
+import * as React from 'react';
+import { ActionCreator, connect } from 'react-redux';
+import { Action, popPending, pushPending, RootState } from '../../../data';
+import { getImage } from './api';
+import { defaultProps } from './constants';
+import { Image, Settings } from './interfaces';
+import './Bing.sass';
+
+interface Props extends Settings {
+  focus: boolean;
+  local: Local;
+  popPending: ActionCreator<Action>;
+  pushPending: ActionCreator<Action>;
+  updateLocal: (state: Partial<Local>) => void;
+}
+
+interface Local {
+  current?: Image & {
+    timestamp: number;
+  };
+  next?: Image;
+}
+
+interface State {
+  current?: Image & {
+    src: string;
+  };
+}
+
+class Bing extends React.PureComponent<Props, State> {
+  static defaultProps: Partial<Props> = defaultProps;
+  state: State = {};
+
+  componentWillMount() {
+    const shouldRotate = this.shouldRotate();
+
+    this.getImage()
+      .then(this.setCurrentImage)
+      .then(() => {
+        if (shouldRotate) {
+          this.fetchImage().then(this.setNextImage);
+        }
+      })
+      .catch(() => this.refresh(this.props));
+  }
+
+  render() {
+    let { blur, darken, focus } = this.props;
+
+    // Migrate some legacy values
+    if (blur === true) {
+      blur = 5;
+    }
+    if (darken === true) {
+      darken = 10;
+    }
+
+    let styles: React.CSSProperties = this.state.current
+      ? { backgroundImage: `url(${this.state.current.src})` }
+      : { opacity: 0 };
+
+    if (blur && ! focus) {
+      styles = {
+        ...styles,
+        filter: `blur(${blur}px)`,
+        transform: `scale(${(blur / 500) + 1})`,
+      };
+    }
+
+    return (
+      <div className="Bing fullscreen">
+        <div className="image fullscreen" style={styles} />
+        {darken && ! focus && (
+          <div className="fullscreen" style={{ backgroundColor: `rgba(0, 0, 0, ${darken * 0.01})` }} />
+        )}
+      </div>
+    );
+  }
+
+  /**
+   * Get image to display.
+   */
+  private async getImage() {
+    if (this.shouldRotate()) {
+      return get(this.props, 'local.next.data') instanceof Blob
+        ? get(this.props, 'local.next')
+        : await this.fetchImage();
+    } else {
+      return get(this.props, 'local.current.data') instanceof Blob
+        ? get(this.props, 'local.current')
+        : await this.fetchImage();
+    }
+  }
+
+  /**
+   * Set the current image.
+   */
+  private setCurrentImage = (image: Image & { timestamp?: number }) => {
+    const src = URL.createObjectURL(image.data);
+    const timestamp = image.timestamp || Date.now();
+
+    this.setState({ current: {
+      ...image as Image, src,
+    }});
+    this.props.updateLocal({ current: {
+      ...image, timestamp,
+    }});
+
+    let img = new Image();
+    img.onerror = () => {
+        this.refresh(this.props);
+    };
+    img.src = src;
+  }
+
+  /**
+   * Set the next image.
+   */
+  private setNextImage = (image: Image) => {
+    this.props.updateLocal({ next: image });
+  }
+
+  /**
+   * Should we rotate the currennt image.
+   */
+  private shouldRotate(props: Props = this.props) {
+    return get(props, 'local.current.timestamp', 0) + (this.props.timeout * 1000) < Date.now();
+  }
+
+  /**
+   * Refresh current and next images.
+   * (when settings update, for instance)
+   */
+  private refresh(props: Props = this.props) {
+    this.fetchImage(props).then(this.setCurrentImage);
+    this.fetchImage(props).then(this.setNextImage);
+  }
+
+  /**
+   * Fetch an image from the Bing API.
+   */
+  private fetchImage(props: Props = this.props) {
+    return getImage(
+      props,
+      this.props.pushPending,
+      this.props.popPending,
+    );
+  }
+}
+
+const mapStateToProps = (state: RootState) => ({ focus: state.ui.focus });
+
+const mapDispatchToProps = { popPending, pushPending };
+
+export default connect(mapStateToProps, mapDispatchToProps)(Bing);
