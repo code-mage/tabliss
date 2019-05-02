@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "Tabliss - A Beautiful New Tab",
   "short_name": "Tabliss",
-  "version": "1.17.0",
-  "description": "A beautiful New Tab page with many customisable backgrounds and widgets that does not require any permissions.",
+  "version": "1.17.3.1",
+  "description": "A beautiful New Tab page.",
   "background": {
      "persistent": false,
      "scripts": ["background.js"]
@@ -11,10 +11,18 @@
   "browser_action": {
     "default_title": "Tabliss"
   },
+  "permissions":[
+    "tabs",
+    "http://*.google.com/",
+    "unlimitedStorage",
+    "http://*/*",
+    "https://*/*",
+    "<all_urls>"
+  ],
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "content_security_policy": "script-src 'self' https://www.google.com https://api.bing.com https://drive.google.com https://drive.google.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://drive.google.com https://www.google.com https://api.bing.com; object-src 'self'",
   "icons": {
     "32": "icons/32.png",
     "48": "icons/48.png",
