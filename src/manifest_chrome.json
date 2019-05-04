@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Tabliss - A Beautiful New Tab",
   "short_name": "Tabliss",
-  "version": "1.17.3.1",
+  "version": "1.17.4",
   "description": "A beautiful New Tab page.",
   "background": {
      "persistent": false,

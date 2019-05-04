@@ -15,6 +15,7 @@ interface Data {
   date: number;
   timestamp: number;
   quote: string;
+  quoteBottom: string;
 }
 
 class Quote extends React.PureComponent<Props> {
@@ -28,9 +29,14 @@ class Quote extends React.PureComponent<Props> {
 
   render() {
     return (
+      <div>
       <h4 className="Quote">
         {get(this.props, 'local.quote')}
       </h4>
+      <div className="QuoteBottom">
+        {get(this.props, 'local.quoteBottom')}
+        </div>
+      </div>
     );
   }
 
@@ -48,9 +54,8 @@ class Quote extends React.PureComponent<Props> {
       date: get(this.props, 'local.date'),
       timestamp: get(this.props, 'local.timestamp'),
       quote: get(this.props, 'local.quote'),
+      quoteBottom: get(this.props, 'local.quoteBottom'),
     };
-
-    // return get(this.props, 'local.quote');
   }
 
   // Read from drive
@@ -62,6 +67,7 @@ class Quote extends React.PureComponent<Props> {
       return {
         date: new Date().getDate(),
         quote: get(body, 'quote'),
+        quoteBottom: get(body, 'quoteBottom'),
         timestamp: Date.now(),
       };
     }
@@ -70,6 +76,7 @@ class Quote extends React.PureComponent<Props> {
       date: 0,
       timestamp: 0,
       quote: "Go Get'm!",
+      quoteBottom: ""
     };
   }
 
